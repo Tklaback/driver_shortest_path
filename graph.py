@@ -6,6 +6,7 @@ class Graph:
         self.vertList = {}
 
     def add_vertex(self, label):
+        self.size += 1
         """Adds vertex to the graph, which is represented as a dictionary"""
         if type(label) != str:
             raise ValueError
@@ -55,12 +56,25 @@ class Graph:
         strang += '}\n'
         return strang
     
-    def shortest_travel_path(self, curVertex, curNum, path, home_vert):
+    def shortest_travel_path(self, curVertex, curNum, temp_path, large_path, home_vert):
+        temp_path.append(str(curVertex))
+        curVertex.color = "gray"
+        print(curVertex)
+        print()
+
+        if curNum == self.size - 1:
+            large_path.append(temp_path)
+            temp_path.pop()
+            curVertex.color = "white"
+            return
         
         for node in curVertex.get_edges():
-            if node != home_vert or curNum >= self.size - 1:
-                print(node)
-
+            if (node != home_vert) and node.color == 'white':
+                self.shortest_travel_path(node, curNum + 1, temp_path, large_path, home_vert)
+        
+        temp_path.pop()
+        curVertex.color = "white"
+                    
     
 class Vertex:
     def __init__(self, label, parent=None, color='white'):

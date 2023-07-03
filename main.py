@@ -68,9 +68,11 @@ def main():
 
     api_key = os.environ["google_maps_api_key"]
 
-    print(build_graph(api_key))
+    g = build_graph(api_key)
 
+    home_vertex = g.get_vertex("360 Wymount Terrace, Provo, UT")
 
+    g.shortest_travel_path(home_vertex, 0, [], [], home_vertex)
 
 
 if __name__ == "__main__":
