@@ -56,20 +56,29 @@ class Graph:
         strang += '}\n'
         return strang
     
-    def shortest_travel_path(self, curVertex, curNum, cur_dist, large_path, home_vert):
+    def shortest_travel_path(self, curVertex, curNum, cur_dist, large_path, temp_path, home_vert):
+        temp_path.append(curVertex.label)
         curVertex.color = "gray"
 
 
         if curNum == self.size - 1:
-            large_path.append(cur_dist + curVertex.get_edges()[home_vert])
+            final_distance = cur_dist + curVertex.get_edges()[home_vert]
+            # temp_path.append(home_vert.label)
+            
+            final_path = [itm for itm in temp_path]
+            final_path.append(home_vert.label)
+            final_path.append(final_distance)
+            large_path.append(final_path)
             curVertex.color = "white"
+            temp_path.pop()
             return
         
         for node in curVertex.get_edges():
             if (node != home_vert) and node.color == 'white':
                 distance = curVertex.get_edges()[node]
-                self.shortest_travel_path(node, curNum + 1, cur_dist + distance, large_path, home_vert)
+                self.shortest_travel_path(node, curNum + 1, cur_dist + distance, large_path, temp_path, home_vert)
         
+        temp_path.pop()
         curVertex.color = "white"
                     
     

@@ -72,11 +72,14 @@ def main():
 
     home_vertex = g.get_vertex("360 Wymount Terrace, Provo, UT")
 
+    temp_path = []
     large_path = []
 
-    g.shortest_travel_path(home_vertex, 0, 0, large_path, home_vertex)
+    g.shortest_travel_path(home_vertex, 0, 0, large_path, temp_path, home_vertex)
 
-    print(large_path)
+    sorted_list = sorted(large_path, key=lambda x : x[-1])
+
+    print(sorted_list[0])
 
 
 if __name__ == "__main__":
