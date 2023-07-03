@@ -72,7 +72,11 @@ def main():
 
     home_vertex = g.get_vertex("360 Wymount Terrace, Provo, UT")
 
-    g.shortest_travel_path(home_vertex, 0, [], [], home_vertex)
+    large_path = []
+
+    g.shortest_travel_path(home_vertex, 0, 0, large_path, home_vertex)
+
+    print(large_path)
 
 
 if __name__ == "__main__":

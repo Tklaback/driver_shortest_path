@@ -56,23 +56,20 @@ class Graph:
         strang += '}\n'
         return strang
     
-    def shortest_travel_path(self, curVertex, curNum, temp_path, large_path, home_vert):
-        temp_path.append(str(curVertex))
+    def shortest_travel_path(self, curVertex, curNum, cur_dist, large_path, home_vert):
         curVertex.color = "gray"
-        print(curVertex)
-        print()
+
 
         if curNum == self.size - 1:
-            large_path.append(temp_path)
-            temp_path.pop()
+            large_path.append(cur_dist + curVertex.get_edges()[home_vert])
             curVertex.color = "white"
             return
         
         for node in curVertex.get_edges():
             if (node != home_vert) and node.color == 'white':
-                self.shortest_travel_path(node, curNum + 1, temp_path, large_path, home_vert)
+                distance = curVertex.get_edges()[node]
+                self.shortest_travel_path(node, curNum + 1, cur_dist + distance, large_path, home_vert)
         
-        temp_path.pop()
         curVertex.color = "white"
                     
     
@@ -94,10 +91,13 @@ class Vertex:
         return self.nbr_list
 
     def __str__(self):
-        return f'{self.label} is connected to {[item.label for item in self.nbr_list]}'
+        return self.label
 
     def __lt__(self, other):
         return self.distance < other.distance
 
     def __gt__(self, other):
         return self.distance > other.distance
+    
+    def print_vertex_data(self):
+        return f'{self.label} is connected to {[item.label for item in self.nbr_list]}'
