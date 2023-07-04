@@ -4,13 +4,11 @@ import json
 from sklearn.cluster import KMeans
 from datetime import datetime
 from sklearn.metrics import silhouette_score
-import numpy as np
-from st_dbscan import ST_DBSCAN
 from math import sqrt
 
 time_format = "%Y-%m-%dT%H:%M:%S%z"
 
-def get_coordinates(address, api_key, time=None):
+def get_coordinates(address, api_key, time=None, id=None):
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
         "address": address,
@@ -22,7 +20,11 @@ def get_coordinates(address, api_key, time=None):
         location = data["results"][0]["geometry"]["location"]
         latitude = location["lat"]
         longitude = location["lng"]
-        if time:
+        if time and id:
+            time = datetime.strptime(time, time_format)
+            time_int = int(time.timestamp())
+            return latitude, longitude, time_int, id
+        elif time:
             time = datetime.strptime(time, time_format)
             time_int = int(time.timestamp())
             return latitude, longitude, time_int
@@ -33,15 +35,15 @@ def get_coordinates(address, api_key, time=None):
 
 def process_data(data, api_key):
 
-    addresses = [(item["address"], item['promise_dt']) for item in data]
+    addresses = [(item["id"], item["address"], item['promise_dt']) for item in data]
 
     coords = []
     
     for addr in addresses:
-        address_coords = get_coordinates(addr[0], api_key, addr[1])
+        address_coords = get_coordinates(addr[1], api_key, addr[2], addr[0])
         coords.append(address_coords)
     
-    X = [[lon, lat, time] for lon, lat, time in coords]
+    X = [[lon, lat, time] for lon, lat, time, id in coords]
 
     min_clusters = 2 
     max_clusters = len(X) - 1
@@ -78,7 +80,7 @@ def process_data(data, api_key):
 
     for idx in range(len(addresses)):
         final_tupl = [item for item in addresses[idx]]
-        final_tupl.append(coords[idx][:-1])
+        final_tupl.append(coords[idx][:-2]) # Appending coordinates to address
         if labels[idx] in dyct:
             dyct[labels[idx]].append(tuple(final_tupl))
         else:
@@ -102,7 +104,8 @@ def calculate_centroid_distance(items):
     return (centroid_latitude, centroid_longitude)
 
 
-def main():
+def handler(event, context):
+
     api_key = os.environ['google_map_api_key']
     home_address = os.environ['home_address']
     
@@ -115,8 +118,6 @@ def main():
     if home_coordinates[0] and home_coordinates[1]:
         sorted_data = {k: v for k, v in sorted(processed_dyct.items(), key=lambda item: (calculate_average_time(item[1]), sqrt((calculate_centroid_distance(item[1])[0] - home_coordinates[0]) ** 2 + (calculate_centroid_distance(item[1])[1] - home_coordinates[1]) ** 2)))}
 
-    for lst in sorted_data:
-        print(sorted_data[lst], "\n")
-
-if __name__ == "__main__":
-    main()
+        return sorted_data
+    
+    return None
