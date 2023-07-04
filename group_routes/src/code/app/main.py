@@ -31,11 +31,9 @@ def get_coordinates(address, api_key, time=None):
     else:
         return None, None
 
-def process_data(api_key):
-    with open("data.json") as file:
-        data = json.load(file)
-    
-    addresses = [(item["address"], item['time']) for item in data]
+def process_data(data, api_key):
+
+    addresses = [(item["address"], item['promise_dt']) for item in data]
 
     coords = []
     
@@ -87,6 +85,8 @@ def process_data(api_key):
             dyct[labels[idx]] = [tuple(final_tupl)]
 
     return dyct
+    
+
 
 def calculate_average_time(items):
     total_seconds = sum([datetime.fromisoformat(item[1]).timestamp() for item in items])
@@ -112,7 +112,8 @@ def main():
 
     # Sort dictionary first by the average time and then by dist from 
     # current location in value of each key, value pair.
-    sorted_data = {k: v for k, v in sorted(processed_dyct.items(), key=lambda item: (calculate_average_time(item[1]), sqrt((calculate_centroid_distance(item[1])[0] - home_coordinates[0]) ** 2 + (calculate_centroid_distance(item[1])[1] - home_coordinates[1]) ** 2)))}
+    if home_coordinates[0] and home_coordinates[1]:
+        sorted_data = {k: v for k, v in sorted(processed_dyct.items(), key=lambda item: (calculate_average_time(item[1]), sqrt((calculate_centroid_distance(item[1])[0] - home_coordinates[0]) ** 2 + (calculate_centroid_distance(item[1])[1] - home_coordinates[1]) ** 2)))}
 
     for lst in sorted_data:
         print(sorted_data[lst], "\n")
