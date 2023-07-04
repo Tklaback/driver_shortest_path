@@ -2,7 +2,6 @@ scipy-1.11.1.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwv
 scipy-1.11.1.dist-info/LICENSE.txt,sha256=d1q29mjtjb7DTw-ZX3nync-sfcp5aBje7D_AHYFrvzA,41429
 scipy-1.11.1.dist-info/METADATA,sha256=PKE2ZmudG_3LEZbLOiprdSDHqeHkt_iKVifMTFqNm_c,54097
 scipy-1.11.1.dist-info/RECORD,,
-scipy-1.11.1.dist-info/REQUESTED,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
 scipy-1.11.1.dist-info/WHEEL,sha256=OPfZKGPBb1EFITKfcXTrfWLOpOFIQY7V5ma6oeqJeeg,94
 scipy/.dylibs/libgcc_s.1.1.dylib,sha256=_IQbXR6GhUP0Ya8X3XNaeutzYXrVb1xj6yvIdLZ0Ri0,126416
 scipy/.dylibs/libgfortran.5.dylib,sha256=lfHrlYaHF1QaY1i1fDqeXXW06FREHkfy1VsgWyWQsWc,6786304

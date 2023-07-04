@@ -1,5 +1,5 @@
 module "api_gateway" {
-  source = "./modules/api-gateway"
+  source = "./modules/api_gateway"
   lambda = module.cluster_lambda.cluster-api-output
 }
 

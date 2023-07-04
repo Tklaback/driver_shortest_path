@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "39dfebdd6ac886126ff7268a4c6e89f3878337388cf16747fe187b6600ec57ab"
+            "sha256": "4bbb735e1addaf28a53c1b06973de3e0dc4916dab7d6899e077167ab37af880b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -227,13 +227,6 @@
             ],
             "markers": "python_version < '3.13' and python_version >= '3.9'",
             "version": "==1.11.1"
-        },
-        "st-dbscan": {
-            "hashes": [
-                "sha256:2899e4cde41949e119e87b7caafc001cc51080c32afa00c0dee67863d1a9e622"
-            ],
-            "index": "pypi",
-            "version": "==0.2.2"
         },
         "threadpoolctl": {
             "hashes": [

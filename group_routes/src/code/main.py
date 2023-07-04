@@ -9,6 +9,5 @@ description="This API opens endpoints that can be programatically used to automa
 )
 
 app.include_router(offboard.router, prefix="/api/v1/offboard", tags=["Offboard"])
-app.include_router(onboard.router, prefix="/api/v1/onboard", tags=["Onboard"])
 
 handler = Mangum(app)
