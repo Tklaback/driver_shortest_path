@@ -105,11 +105,12 @@ def calculate_centroid_distance(items):
 
 
 def handler(event, context):
+    data = event['data']
 
     api_key = os.environ['google_map_api_key']
     home_address = os.environ['home_address']
     
-    processed_dyct = process_data(api_key)
+    processed_dyct = process_data(data, api_key)
 
     home_coordinates = get_coordinates(home_address, api_key)
 
