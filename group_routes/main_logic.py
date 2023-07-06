@@ -91,14 +91,14 @@ def process_data(data, api_key):
 
 
 def calculate_average_time(items):
-    total_seconds = sum([datetime.fromisoformat(item[1]).timestamp() for item in items])
+    total_seconds = sum([datetime.fromisoformat(item[2]).timestamp() for item in items])
     average_seconds = total_seconds / len(items)
     return average_seconds
 
 # Define a function to calculate the centroid distance
 def calculate_centroid_distance(items):
-    latitudes = [item[2][0] for item in items]
-    longitudes = [item[2][1] for item in items]
+    latitudes = [item[3][0] for item in items]
+    longitudes = [item[3][1] for item in items]
     centroid_latitude = sum(latitudes) / len(latitudes)
     centroid_longitude = sum(longitudes) / len(longitudes)
     return (centroid_latitude, centroid_longitude)
@@ -110,29 +110,30 @@ def handler(event):
     # {"ticket_id":4657,"address":"2613 Portside Dr","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T20:33:37+00:00"},
     # {"ticket_id":4658,"address":"2766 Ocean OaksDr","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T20:38:56+00:00"}
     # ]
-
     new_data = []
 
-    for itm in event:
-        new_data.append({'id': itm['ticket_id'], 
-                         'address': f"{itm['address']}, {itm['city']}, {itm['state']}",
-                         'promise_dt': f"{itm['promised_dt']}"
-                         })
+    try:
 
-    api_key = os.environ['google_map_api_key']
-    home_address = os.environ['home_address']
+        for itm in event:
+            new_data.append({'id': itm['ticket_id'], 
+                            'address': f"{itm['address']}, {itm['city']}, {itm['state']}",
+                            'promise_dt': f"{itm['promised_dt']}"
+                            })
 
+        api_key = os.environ['google_map_api_key']
+        home_address = os.environ['home_address']
+        
+        processed_dyct = process_data(new_data, api_key)
 
-    
-    processed_dyct = process_data(new_data, api_key)
+        home_coordinates = get_coordinates(home_address, api_key)
 
-    home_coordinates = get_coordinates(home_address, api_key)
+        # Sort dictionary first by the average time and then by dist from 
+        # current location in value of each key, value pair.
+        if home_coordinates[0] and home_coordinates[1]:
+            sorted_data = [[itm[0] for itm in v] for k, v in sorted(processed_dyct.items(), key=lambda item: (calculate_average_time(item[1]), sqrt((calculate_centroid_distance(item[1])[0] - home_coordinates[0]) ** 2 + (calculate_centroid_distance(item[1])[1] - home_coordinates[1]) ** 2)))]
 
-    # Sort dictionary first by the average time and then by dist from 
-    # current location in value of each key, value pair.
-    if home_coordinates[0] and home_coordinates[1]:
-        sorted_data = {k: v for k, v in sorted(processed_dyct.items(), key=lambda item: (calculate_average_time(item[1]), sqrt((calculate_centroid_distance(item[1])[0] - home_coordinates[0]) ** 2 + (calculate_centroid_distance(item[1])[1] - home_coordinates[1]) ** 2)))}
-
-        return sorted_data
+            return sorted_data
+    except Exception as error:
+        print("Error:", error)
     
     return None
