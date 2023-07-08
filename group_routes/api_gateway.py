@@ -14,4 +14,4 @@ def getClusters():
     return jsonify({"Message:" : "Error"})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    app.run(threaded=True,host="0.0.0.0", port=8000)

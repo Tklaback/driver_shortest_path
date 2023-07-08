@@ -5,6 +5,8 @@ from sklearn.cluster import KMeans
 from datetime import datetime
 from sklearn.metrics import silhouette_score
 from math import sqrt
+import matplotlib.pyplot as plt
+import numpy as np
 
 time_format = "%Y-%m-%dT%H:%M:%S%z"
 
@@ -76,6 +78,31 @@ def process_data(data, api_key):
 
     labels = kmeans.labels_
 
+
+    centers = kmeans.cluster_centers_
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    X = np.array(X)
+
+    # Plot the data points
+    ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=labels, cmap='viridis')
+
+    # Plot the cluster centers
+    # ax.scatter([center[0] for center in centers], [center[1] for center in centers], [center[2] for center in centers], marker='x', color='red', s=200)
+
+    # Set labels for each axis
+    ax.set_xlabel('Longitude')
+    ax.set_ylabel('Latitude')
+    ax.set_zlabel('Time')
+
+    # Set a title for the plot
+    ax.set_title('K-means Clustering')
+
+    # Show the 3D plot
+    plt.show()
+
     dyct = {}
 
     for idx in range(len(addresses)):
@@ -132,8 +159,25 @@ def handler(event):
         if home_coordinates[0] and home_coordinates[1]:
             sorted_data = [[itm[0] for itm in v] for k, v in sorted(processed_dyct.items(), key=lambda item: (calculate_average_time(item[1]), sqrt((calculate_centroid_distance(item[1])[0] - home_coordinates[0]) ** 2 + (calculate_centroid_distance(item[1])[1] - home_coordinates[1]) ** 2)))]
 
+            print(sorted_data)
             return sorted_data
     except Exception as error:
         print("Error:", error)
     
     return None
+
+
+handler([
+    {"ticket_id":4656,"address":"1869 Turtle Dunes Pl","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T16:19:48+00:00"},
+    {"ticket_id":4657,"address":"2613 Portside Dr","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T20:33:37+00:00"},
+    {"ticket_id":4555,"address":"2766 Ocean OaksDr","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T20:38:56+00:00"},
+    {"ticket_id":4556,"address":"2106 Jekyll Ct","city":"Fernandina Beach","state":"FL", "promised_dt": "2023-07-01T23:53:52+00:00"},
+    {"ticket_id":4557,"address":"4750 Amelia Island Pkwy","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T21:50:08+00:00"},
+    {"ticket_id":4558,"address":"3350 S Fletcher Ave","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-02T00:52:53+00:00"},
+    {"ticket_id":4559,"address":"835 N Fletcher Ave","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T22:14:17+00:00"},
+    {"ticket_id":4000,"address":"2701 Allan St","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-02T00:28:02+00:00"},
+    {"ticket_id":4001,"address":"2801 Atlantic Ave","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T17:45:05+00:00"},
+    {"ticket_id":4002,"address":"2816 W 4th St","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-02T01:56:15+00:00"},
+    {"ticket_id":4003,"address":"3350 S Fletcher Ave","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T20:48:13+00:00"},
+    {"ticket_id":4004,"address":"975 S Fletcher Ave","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T23:39:25+00:00"},
+    ])
