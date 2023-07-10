@@ -106,9 +106,9 @@ def calculate_centroid_distance(items):
 
 def handler(event):
     # [
-    # {"ticket_id":4656,"address":"1869 Turtle Dunes Pl","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T16:19:48+00:00"},
-    # {"ticket_id":4657,"address":"2613 Portside Dr","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T20:33:37+00:00"},
-    # {"ticket_id":4658,"address":"2766 Ocean OaksDr","city":"Fernandina Beach","state":"FL","zip":"32034", "promised_dt": "2023-07-01T20:38:56+00:00"}
+    # {"ticket_id":4656,"address":"1869 Turtle Dunes Pl","city":"Fernandina Beach","state":"FL","zip":"32034", "promise_dt": "2023-07-01T16:19:48+00:00"},
+    # {"ticket_id":4657,"address":"2613 Portside Dr","city":"Fernandina Beach","state":"FL","zip":"32034", "promise_dt": "2023-07-01T20:33:37+00:00"},
+    # {"ticket_id":4658,"address":"2766 Ocean OaksDr","city":"Fernandina Beach","state":"FL","zip":"32034", "promise_dt": "2023-07-01T20:38:56+00:00"}
     # ]
     new_data = []
 
@@ -117,7 +117,7 @@ def handler(event):
         for itm in event:
             new_data.append({'id': itm['ticket_id'], 
                             'address': f"{itm['address']}, {itm['city']}, {itm['state']}",
-                            'promise_dt': f"{itm['promised_dt']}"
+                            'promise_dt': f"{itm['promise_dt']}"
                             })
 
         api_key = os.environ['google_map_api_key']
