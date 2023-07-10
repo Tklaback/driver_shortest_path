@@ -6,7 +6,7 @@ from datetime import datetime
 from sklearn.metrics import silhouette_score
 from math import sqrt
 
-time_format = "%Y-%m-%dT%H:%M:%S%z"
+time_format = "%Y-%m-%d %H:%M:%S"
 
 def get_coordinates(address, api_key, time=None, id=None):
     url = "https://maps.googleapis.com/maps/api/geocode/json"
